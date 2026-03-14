@@ -23,14 +23,14 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 PROJECTS_DIR = REPO_ROOT / "projects"
 OUTPUT_FILE = REPO_ROOT / "manifest.json"
 
-# Frontmatter fields to include in each card entry.
-# 'files' is intentionally excluded — it belongs to the full project page, not the card.
 CARD_FIELDS = [
     "title",
     "description",
     "date",
     "cover",
+    "cover_alt",
     "gallery",
+    "files",
     "status",
     "featured",
     "tags",
@@ -101,6 +101,29 @@ def resolve_image(project_dir: Path, bare_name: str) -> str | None:
     return f"images/{matches[0].name}"
 
 
+def resolve_file(project_dir: Path, bare_name: str) -> str | None:
+    """
+    Given a bare file name (no extension, no path), find the matching file
+    in the project's files/ subdirectory and return its relative path
+    (e.g. 'files/01-source.zip').
+    Returns None and prints a warning if no match is found.
+    Multiple files with the same stem are an error — the convention requires
+    unique names regardless of extension.
+    """
+    files_dir = project_dir / "files"
+    if not files_dir.is_dir():
+        print(f"  [warn] No files/ directory in {project_dir.name} — cannot resolve '{bare_name}'")
+        return None
+    matches = [f for f in files_dir.iterdir() if f.is_file() and f.stem == bare_name]
+    if not matches:
+        print(f"  [warn] File not found for bare name '{bare_name}' in {project_dir.name}/files/")
+        return None
+    if len(matches) > 1:
+        names = ", ".join(f.name for f in matches)
+        print(f"  [warn] Multiple files match '{bare_name}' in {project_dir.name}/files/: {names} — using first")
+    return f"files/{matches[0].name}"
+
+
 def build_card(slug: str, frontmatter: dict, project_dir: Path) -> dict:
     """Build a single card entry from a slug and its parsed frontmatter."""
     card = {"slug": slug}
@@ -114,7 +137,29 @@ def build_card(slug: str, frontmatter: dict, project_dir: Path) -> dict:
             elif field == "cover" and isinstance(value, str):
                 value = resolve_image(project_dir, value) or value
             elif field == "gallery" and isinstance(value, list):
-                value = [resolve_image(project_dir, name) or name for name in value]
+                resolved = []
+                for entry in value:
+                    if isinstance(entry, dict):
+                        name = entry.get("name", "")
+                        resolved.append({
+                            "src": resolve_image(project_dir, name) or name,
+                            "label": entry.get("label", ""),
+                        })
+                    else:
+                        resolved.append({"src": resolve_image(project_dir, entry) or entry})
+                value = resolved
+            elif field == "files" and isinstance(value, list):
+                resolved = []
+                for entry in value:
+                    if isinstance(entry, dict):
+                        name = entry.get("name", "")
+                        resolved.append({
+                            "src": resolve_file(project_dir, name) or name,
+                            "label": entry.get("label", ""),
+                        })
+                    else:
+                        resolved.append({"src": resolve_file(project_dir, entry) or entry})
+                value = resolved
             card[field] = value
     return card
 

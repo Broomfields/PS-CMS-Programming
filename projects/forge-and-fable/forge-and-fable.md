@@ -2,7 +2,7 @@
 title: "Forge & Fable"
 description: "A personal portfolio built in Blazor Server, pulling live content from three independent headless CMSes — each one a different slice of what I make."
 date: 2026-03-16
-cover: "screenshot"
+cover: "01_screenshot"
 cover_alt: "A screenshot of the website landing page."
 status: "wip"
 featured: true

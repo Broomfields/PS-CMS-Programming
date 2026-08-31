@@ -2,7 +2,7 @@
 title: "Ghillie Suit"
 description: "A Fabric mod that adds a mossy ghillie suit with two stealth tiers. The full suit halves mob detection range, and crouching makes you invisible to every mob."
 date: 2020-12-25
-cover: "ghilliesuit-hero"
+cover: "01-ghilliesuit-hero"
 cover_alt: "Ghillie Suit mod banner"
 status: "complete"
 repo: "https://github.com/Broomfields/ghilliesuit"
@@ -15,19 +15,19 @@ links:
   - label: "Modrinth"
     url: "https://modrinth.com/mod/ghilliesuit"
 gallery:
-  - name: "ghillie-sneak"
+  - name: "02-ghillie-sneak"
     label: "The full ghillie suit in action. Crouching hides you from every mob"
-  - name: "transition"
+  - name: "03-transition"
     label: "Standing in the suit compared to crouching"
-  - name: "moss-weave"
+  - name: "04-moss-weave"
     label: "Moss Weave crafting recipe"
-  - name: "hood"
+  - name: "05-hood"
     label: "Ghillie hood recipe"
-  - name: "tunic"
+  - name: "06-tunic"
     label: "Ghillie tunic recipe"
-  - name: "pants"
+  - name: "07-pants"
     label: "Ghillie pants recipe"
-  - name: "boots"
+  - name: "08-boots"
     label: "Ghillie boots recipe"
 credits:
   - label: "Fabric example mod"
@@ -50,11 +50,15 @@ Stealth comes from the suit in two ways. The first is a gradual reduction in how
 
 Because the reduction is a percentage, it applies the same way to mobs with very different detection ranges. The chart below shows that against real mob ranges, with a point for each piece worn.
 
-![Mob detection range by ghillie pieces worn](images/stealth-chart.png)
+![Mob detection range by ghillie pieces worn](images/09-stealth-chart.png)
 
 *Mob detection range by pieces worn. Each mob shows its range with 0 to 4 pieces, halved at the full suit. The band at the left is the active ability, the full suit plus crouch, which makes every mob unable to target you.*
 
 The crouch is where the suit does its real work. With the full suit, crouching makes you untargetable, so mobs can no longer acquire you, and mobs already chasing you lose you on the spot because the crouch clears their target instead of just hiding you from new ones. Other players still see you, but as a translucent ghost, the way spectators appear, and full invisibility would be unfair in PvP, so the suit leaves you that ghost instead of vanishing completely.
+
+![The full ghillie suit in action. Crouching hides you from every mob](images/02-ghillie-sneak.gif)
+
+*The full ghillie suit in action. Crouching hides you from every mob.*
 
 The deeper reasoning and the implementation are in the [stealth design notes](stealth-design).
 
